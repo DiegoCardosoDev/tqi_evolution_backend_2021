@@ -27,6 +27,7 @@ public class LendingServiceImpl implements LendingService {
     @Autowired
     private ModelMapper mapper;
 
+    //por id
     @Override
     public Lending findById(Integer id) {
         Optional<Lending> obj = repository.findById(id);
@@ -35,24 +36,27 @@ public class LendingServiceImpl implements LendingService {
         });
     }
 
+    //listar todos emprestimos
     @Override
     public List<Lending> findAll() {
         return repository.findAll();
     }
 
-    //metodo create
+    //metodo create emprestimo
     @Override
     public Lending create(LendingDto obj) {
-        LocalDate dataLimite = LocalDate.now().plusMonths(3);
-        if (obj.getDateOnePayment().equals(dataLimite)) {
+        LocalDate limitData = LocalDate.now().plusMonths(3);
+
+        if (obj.getDateOnePayment().equals(limitData)) {
             if (obj.getNumberParcel() <= 60 && obj.getNumberParcel() < 1) {
 
                 return repository.save(mapper.map(obj, Lending.class));
-            }else
-                System.out.println("quanditade de parcelas 60");
-        }else
-            System.out.println("data para primeira parcela exedida");
 
-        return null;
+            }else
+                throw  new ObjectNotFoundExeption("quanditade de parcelas 60");
+        }else {
+            throw  new ObjectNotFoundExeption("data exedida");
+        }
+
     }
 }

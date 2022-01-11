@@ -23,18 +23,22 @@ public class LendingResource {
 
     public static final String ID = "/{id}";
 
+    //procurar emprestimos por id
     @GetMapping(value = ID)
     public ResponseEntity<LendingDto> findById(@PathVariable Integer id) {
         return ResponseEntity.ok().body(mapper.map(service.findById(id), LendingDto.class));
     }
 
+    //listar emprrestimos
     @GetMapping
     public ResponseEntity<List<LendingDto>> findAll() {
         return ResponseEntity.ok()
-                .body(service.findAll().stream().map(x -> mapper.map(x, LendingDto.class)).collect(Collectors.toList()));
+                .body(service.findAll().stream().map(x -> mapper.map(x, LendingDto.class))
+                        .collect(Collectors.toList()));
 
     }
 
+    //criar emprestimo
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<LendingDto> create(@RequestBody LendingDto obj) {
